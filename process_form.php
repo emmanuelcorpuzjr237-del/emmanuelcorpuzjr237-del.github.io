@@ -2,47 +2,52 @@
 // Set the content type to HTML and charset to UTF-8
 header('Content-Type: text/html; charset=utf-8');
 
+// Define a variable for the file path
+$file_path = 'submissions.csv';
+
 // --- 1. CHECK IF THE FORM WAS SUBMITTED VIA POST ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // --- 2. COLLECT AND SANITIZE INPUT DATA ---
-    // Use htmlspecialchars() to prevent Cross-Site Scripting (XSS) attacks
-    // Use the 'name' attributes from your HTML form fields:
+    // Update the variable names and the $_POST keys to match the 'name' attributes from index.html:
+    // division, machine-name, asset-id, building-location, area-id, line-model
     
-    $production_module = htmlspecialchars($_POST['production_module'] ?? '', ENT_QUOTES, 'UTF-8');
-    $machine_name      = htmlspecialchars($_POST['machine_name'] ?? '', ENT_QUOTES, 'UTF-8');
-    $asset_id          = htmlspecialchars($_POST['asset_id'] ?? '', ENT_QUOTES, 'UTF-8');
-    $building          = htmlspecialchars($_POST['building'] ?? 'Building A', ENT_QUOTES, 'UTF-8'); // 'Building A' is likely a default/fixed value
-    $area              = htmlspecialchars($_POST['area'] ?? '', ENT_QUOTES, 'UTF-8');
-    $line_model        = htmlspecialchars($_POST['line_model'] ?? '', ENT_QUOTES, 'UTF-8');
+    $division          = htmlspecialchars($_POST['division'] ?? '', ENT_QUOTES, 'UTF-8');
+    $machine_name      = htmlspecialchars($_POST['machine-name'] ?? '', ENT_QUOTES, 'UTF-8');
+    $asset_id          = htmlspecialchars($_POST['asset-id'] ?? '', ENT_QUOTES, 'UTF-8');
+    $building_location = htmlspecialchars($_POST['building-location'] ?? '', ENT_QUOTES, 'UTF-8');
+    $area_id           = htmlspecialchars($_POST['area-id'] ?? '', ENT_QUOTES, 'UTF-8');
+    $line_model        = htmlspecialchars($_POST['line-model'] ?? '', ENT_QUOTES, 'UTF-8'); // This field is optional/nullable
 
-    // --- 3. PROCESS/STORE THE DATA (Example: Save to a File) ---
-    // You can replace this section with database connection code (MySQL, PostgreSQL, etc.)
+    // --- 3. PROCESS/STORE THE DATA (Saving to CSV File) ---
     
     $data_entry = [
         date("Y-m-d H:i:s"),
-        $production_module,
+        $division,
         $machine_name,
         $asset_id,
-        $building,
-        $area,
+        $building_location,
+        $area_id,
         $line_model
     ];
     
-    $file_path = 'submissions.csv';
-    $file = fopen($file_path, 'a'); // Open file in append mode ('a')
+    // Attempt to open the file in append mode ('a')
+    $file = fopen($file_path, 'a');
     
-    // Check if the file is empty to write the header row only once
-    if (filesize($file_path) == 0) {
-        $header = ['Timestamp', 'Production Module', 'Machine Name', 'Asset No./ID', 'Building', 'Area', 'Line/Model'];
-        fputcsv($file, $header);
+    if ($file) {
+        // Check if the file is empty to write the header row only once
+        if (filesize($file_path) == 0) {
+            $header = ['Timestamp', 'Division', 'Machine Name', 'Asset No./ID', 'Building Location', 'Specified Area/ID', 'Line/Model'];
+            fputcsv($file, $header);
+        }
+        
+        // Write the new data entry
+        fputcsv($file, $data_entry);
+        fclose($file);
     }
     
-    // Write the new data entry
-    fputcsv($file, $data_entry);
-    fclose($file);
-    
     // --- 4. DISPLAY SUCCESS MESSAGE ---
+    // Note: I've updated the variable names in the success message too.
     ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -55,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             h2 { color: #0000FF; }
             ul { list-style-type: none; padding: 0; }
             li { margin-bottom: 10px; }
-            strong { display: inline-block; width: 150px; }
+            strong { display: inline-block; width: 170px; }
         </style>
     </head>
     <body>
@@ -64,14 +69,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p>The **Online Machine Safety and Assessment Qualification** details have been recorded.</p>
             <p>--- Submitted Data ---</p>
             <ul>
-                <li><strong>Production Module:</strong> <?php echo $production_module; ?></li>
+                <li><strong>Division/Module:</strong> <?php echo $division; ?></li>
                 <li><strong>Machine Name:</strong> <?php echo $machine_name; ?></li>
                 <li><strong>Asset No./ID:</strong> <?php echo $asset_id; ?></li>
-                <li><strong>Building:</strong> <?php echo $building; ?></li>
-                <li><strong>Specified Area:</strong> <?php echo $area; ?></li>
+                <li><strong>Building Location:</strong> <?php echo $building_location; ?></li>
+                <li><strong>Specified Area/ID:</strong> <?php echo $area_id; ?></li>
                 <li><strong>Line or Model:</strong> <?php echo $line_model; ?></li>
             </ul>
-            <a href="machine_form.html">Return to Form</a>
+            <a href="index.html">Return to Form</a>
         </div>
     </body>
     </html>
