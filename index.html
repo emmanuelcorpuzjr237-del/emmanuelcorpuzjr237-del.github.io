@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Machine Safety and Assessment Qualification</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>ONLINE MACHINE SAFETY AND ASSESSMENT QUALIFICATION</h1>
+
+        <form action="process_form.php" method="POST">
+            
+            <div class="form-group">
+                <select name="division" id="division">
+                    <option value="">--- Please Select Your Division ---</option>
+                    <option value="Engineering M">Engineering Module</option>
+                    <option value="Engineering C">Engineering Component</option>
+                    <option value="Production M">Production Module</option>
+                    <option value="Production C">Production Component</option>
+                    <option value="Quality">Quality Assurance</option>
+                    <option value="Production">PCD & Warehouse</option>
+                    <option value="Administration">Administration</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="machine-name">Machine Name:</label>
+                <input type="text" id="machine-name" name="machine-name" size="30" required>
+            </div>
+
+            <div class="form-group">
+                <label for="asset-id">Asset No./ID:</label>
+                <input type="text" id="asset-id" name="asset-id" size="18" required>
+            </div>
+
+            <div class="form-group">
+                <select name="building-location" id="building-location">
+                    <option value="">--- Select Building Location for Set-up ---</option>
+                    <option value="Building A">Building A</option>
+                    <option value="Building B">Building B</option>
+                    <option value="Building C">Building C</option>
+                    <option value="Building D">Building D</option>
+                    <option value="Quality Assurance">Quality Assurance</option>
+                    <option value="Facility Area">Facility Area</option>
+                    <option value="Common Area">Common Area</option>
+                </select>
+            </div>
+
+            <div class="main-content">
+                <form action="YOUR_SERVER_ENDPOINT_URL" method="POST">  
+                    <div class="form-group">
+                        <label for="line-model">Line or Model if Applicable:</label>
+                        <input type="text" id="line-model" name="line-model" size="18">
+        </div>
+
+        <div class="button-container">
+            <button type="submit">SUBMIT</button>
+        </div>
+    </form>  
+</div>
+
+</body>
+</html>
